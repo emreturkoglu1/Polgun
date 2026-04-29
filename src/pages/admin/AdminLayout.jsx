@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { GhostButton } from '../components/AdminUI'
-import { apiJson } from '../lib/api'
+import { GhostButton } from '../../components/AdminUı'
+import { apiJson } from '../../lib/api'
 
 export function AdminLayout() {
   const linkClass = ({ isActive }) =>
