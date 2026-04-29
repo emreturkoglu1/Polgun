@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 
-// Sayfalar (Public)
+// Public Sayfalar
 import HomePage from './pages/HomePage'
 import ProductsPage from './pages/ProductsPage'
 import ServicesPage from './pages/ServicesPage'
@@ -14,9 +14,8 @@ import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
 import SplashTowerPage from './pages/SplashTower'
 
-// Admin Gateway (Admin ve Login yönetimini bu yapıyor)
+// Admin Gateway
 import AdminGateway from './AdminGateway'
-
 import { COLOR_PALETTES } from './constants/colorPalettes'
 
 // Renk yardımcı fonksiyonu (Shade)
@@ -41,30 +40,22 @@ export default function App() {
   const location = useLocation()
   const [colorPalette, setColorPalette] = useState(1)
 
-  // URL'den aktif sayfayı belirle (Navbar aktif linki için)
+  // Navbar aktif link kontrolü
   const pathParts = location.pathname.split('/').filter(Boolean)
   const activePage = pathParts[0] || 'home'
 
   const palette = COLOR_PALETTES[colorPalette] || COLOR_PALETTES[1]
-
   const themeVars = {
     '--th-primary': palette.primary,
     '--th-primary-darker': shade(palette.primary, -0.34),
     '--th-bg': palette.light,
   }
 
-  // Admin veya Login yollarındaysak Navbar ve Footer'ı gizle
   const isAdminArea = location.pathname.startsWith('/admin') || location.pathname.startsWith('/login')
 
   return (
     <div className="min-h-screen flex flex-col" data-theme="A" style={themeVars}>
-      {/* Admin alanında değilsek Navbar göster */}
-      {!isAdminArea && (
-        <Navbar 
-          activePage={activePage} 
-          colorPalette={colorPalette} 
-        />
-      )}
+      {!isAdminArea && <Navbar activePage={activePage} colorPalette={colorPalette} />}
       
       <div className="flex-1">
         <Routes>
@@ -77,16 +68,14 @@ export default function App() {
           <Route path="/about" element={<AboutPage setColorPalette={setColorPalette} />} />
           <Route path="/contact" element={<ContactPage setColorPalette={setColorPalette} />} />
           
-          {/* Admin & Login (Wildcard '*' önemli) */}
+          {/* Admin & Login Alt Yapısı (Wildcard Şart) */}
           <Route path="/login/*" element={<AdminGateway />} />
           <Route path="/admin/*" element={<AdminGateway />} />
 
-          {/* Tanımsız yolları ana sayfaya yönlendir */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
 
-      {/* Admin alanında değilsek Footer göster */}
       {!isAdminArea && <Footer />}
     </div>
   )
