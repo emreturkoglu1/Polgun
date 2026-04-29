@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { apiJson } from './lib/api'
 import { AdminLayout } from './pages/admin/AdminLayout'
@@ -28,7 +28,8 @@ function LoginView() {
         method: 'POST',
         body: JSON.stringify({ email, password }),
       })
-      window.location.replace('/admin')
+      // window.location.replace kullanmak session'ın tazelenmesi için iyidir
+      window.location.replace('/admin/catalogs')
     } catch (err) {
       setError(err?.message || 'Giriş sırasında beklenmeyen bir hata oluştu.')
     } finally {
@@ -37,28 +38,32 @@ function LoginView() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4" style={{ backgroundColor: '#f3f4f6' }}>
-      <form onSubmit={onSubmit} className="w-full max-w-md rounded-xl bg-white p-6 shadow">
-        <h1 className="text-xl font-bold mb-4">Admin Giriş</h1>
-        <label className="block text-sm mb-1">E-posta</label>
-        <input
-          className="w-full border rounded px-3 py-2 mb-3"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label className="block text-sm mb-1">Şifre</label>
-        <input
-          className="w-full border rounded px-3 py-2 mb-3"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error ? <p className="text-sm text-red-600 mb-3">{error}</p> : null}
+    <main className="min-h-screen flex items-center justify-center px-4 bg-slate-100">
+      <form onSubmit={onSubmit} className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
+        <h1 className="text-2xl font-bold mb-6 text-slate-800">Admin Giriş</h1>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-slate-700 mb-1">E-posta</label>
+          <input
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-slate-700 mb-1">Şifre</label>
+          <input
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {error ? <p className="text-sm text-red-600 mb-4">{error}</p> : null}
         <button
-          className="w-full rounded bg-blue-600 text-white py-2 disabled:opacity-60"
+          className="w-full rounded-lg bg-blue-600 text-white py-2.5 font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60"
           type="submit"
           disabled={isSubmitting}
         >
@@ -85,32 +90,32 @@ function AdminPanel() {
           window.location.replace('/login')
         }
       } catch {
-        window.location.replace('/login')
+        if (mounted) window.location.replace('/login')
       } finally {
         if (mounted) setChecking(false)
       }
     })()
-    return () => {
-      mounted = false
-    }
+    return () => { mounted = false }
   }, [])
 
-  if (checking) return <div className="p-6">Oturum kontrol ediliyor...</div>
+  if (checking) return <div className="p-10 text-center font-medium">Oturum kontrol ediliyor...</div>
   if (!sessionOk) return null
 
   return (
-    <main className="min-h-screen p-6" style={{ backgroundColor: '#f8fafc' }}>
-      <div className="max-w-7xl mx-auto">
+    <main className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto py-6 px-4">
         <Routes>
           <Route element={<AdminLayout />}>
-            <Route path="admin/catalogs" element={<AdminCatalogsPage />} />
-            <Route path="admin/careers" element={<AdminCareersPage />} />
-            <Route path="admin/fairs" element={<AdminFairsPage />} />
-            <Route path="admin/journal" element={<AdminJournalPage />} />
-            <Route path="admin/applications" element={<AdminApplicationsPage />} />
-            <Route path="admin/partnerships" element={<AdminPartnershipsPage />} />
-            <Route path="admin/contacts" element={<AdminContactsPage />} />
-            <Route path="admin" element={<Navigate to="admin/catalogs" replace />} />
+            {/* BURASI ÇOK ÖNEMLİ: path kısmından "admin/" öneki kaldırıldı çünkü zaten /admin altındayız */}
+            <Route path="catalogs" element={<AdminCatalogsPage />} />
+            <Route path="careers" element={<AdminCareersPage />} />
+            <Route path="fairs" element={<AdminFairsPage />} />
+            <Route path="journal" element={<AdminJournalPage />} />
+            <Route path="applications" element={<AdminApplicationsPage />} />
+            <Route path="partnerships" element={<AdminPartnershipsPage />} />
+            <Route path="contacts" element={<AdminContactsPage />} />
+            {/* Default redirect: Başına / koyarak mutlak yol veriyoruz */}
+            <Route path="" element={<Navigate to="/admin/catalogs" replace />} />
           </Route>
         </Routes>
       </div>
@@ -118,24 +123,24 @@ function AdminPanel() {
   )
 }
 
-function LoginRoute() {
-  return (
-    <Routes>
-      <Route path="login" element={<LoginView />} />
-      <Route path="*" element={<Navigate to="login" replace />} />
-    </Routes>
-  )
-}
-
 export default function AdminGateway() {
-  const isLoginPath = /^\/login(\/|$)/.test(window.location.pathname)
-  const isAdminPath = /^\/admin(\/|$)/.test(window.location.pathname)
+  const location = useLocation()
+  const isLoginPath = location.pathname.startsWith('/login')
+  const isAdminPath = location.pathname.startsWith('/admin')
 
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        {isLoginPath ? <LoginRoute /> : <AdminPanel />}
-      </BrowserRouter>
+      {/* BrowserRouter dışarıda (App.jsx veya main.jsx) olmalı, burada sadece içeriği seçiyoruz */}
+      {isLoginPath ? (
+        <Routes>
+          <Route path="login" element={<LoginView />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      ) : isAdminPath ? (
+        <AdminPanel />
+      ) : (
+        <Navigate to="/login" replace />
+      )}
     </QueryClientProvider>
   )
 }
