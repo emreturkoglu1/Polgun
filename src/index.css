@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #F5F5F1;
+  --color-teal: #1B9FA3;
+  --color-teal-dark: #147A7E;
+  --color-teal-light: #E8F7F7;
+  --color-anthracite: #2C2C2C;
+  --color-anthracite-light: #4A4A4A;
+  --color-navy: #0F2B5B;
+  --color-coral: #E8572A;
+  --color-coral-dark: #C4421A;
+  --color-forest: #1A5C3A;
+  --color-forest-dark: #134429;
+}
+
+/* ── Sabit Tema: Polgün Blue + Antrasit metin + Accent vurgu ──── */
+
+:root,
+[data-theme="A"] {
+  --th-primary:      #22ABE6;   /* Polgün Blue - başlıklar, koyu arka planlar */
+  --th-primary-darker: #1565C0; 
+  --th-primary-light:      #bae8fc;   /* Darker blue - contrast & depth */
+
+  
+  --th-bg:           #F4F4F0;   /* açık krem arka plan */
+  --th-surface:      #ffffff;
+  --th-text:         #373F43;   /* antrasit metin */
+  --th-text-muted:   #5A5A5A;
+  --th-border:       #D8D8D4;
+
+  --th-polgun-blue: #2874B2;
+  --th-polgun-antrasit: #373F43;
+
+  /* Layout: viewport büyüdükçe (zoom out dahil) içerik daha geniş ve büyük hissedilsin */
+  --layout-max: clamp(1400px, 92vw, 1920px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+
+  /* Viewport büyüdükçe (zoom out dahil) rem tabanlı ölçüler büyür */
+  font-size: clamp(16px, 1vw, 20px);
+}
+
+body {
+  margin: 0;
+  background-color: #F4F4F0;
+  color: #1E1E1E;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Marquee kayan animasyon ─────────────────────────── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
