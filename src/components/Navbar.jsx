@@ -33,12 +33,6 @@ const NAV_ITEMS = [
     mega: false,
   },
   {
-    id: 'fairs',
-    label: 'Fuarlar',
-    page: 'fairs',
-    mega: false,
-  },
-  {
     id: 'products',
     label: 'Ürünlerimiz',
     page: 'products',
@@ -51,7 +45,6 @@ const NAV_ITEMS = [
           { label: 'Splash Tower',  desc: '',           page: 'splash-tower' },
           { label: 'Splash Zone',               desc: '',        page: 'products' },
           { label: 'Animasyonlar',        desc: '',    page: 'products' },
-          { label: 'Kataloglar', desc: '', page: 'catalogs' },
                 ],
       },
       /*{
@@ -83,9 +76,8 @@ const NAV_ITEMS = [
           { label: 'Tarihçemiz',      desc: '',           page: 'about' },
           { label: 'Ödüller & Patent',desc: '',           page: 'about' },
           { label: 'Sürdürülebilirlik',desc: '',         page: 'about' },
-          { label: 'Haberler & Etkinlikler', desc: '',   page: 'journal' },
-          { label: 'Kariyer',         desc: '',               page: 'careers' },
-          { label: 'Partnerlik',      desc: '',               page: 'partnership' },
+          { label: 'Haberler & Etkinlikler', desc: '',   page: 'about' },
+          { label: 'Kariyer',         desc: '',               page: 'about' },
         ],
       },
     ],

@@ -4,8 +4,6 @@
 // Sayfa-spesifik renk paletleri
 // ============================================================
 import { useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
@@ -16,13 +14,6 @@ import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
 import SplashTowerPage from './pages/SplashTower'
 import { COLOR_PALETTES } from './constants/colorPalettes'
-import { App as CmsApp } from '../../frontend/src/App'
-import { AuthProvider } from '../../frontend/src/lib/auth'
-import { PublicCatalogsPage } from '../../frontend/src/pages/public/PublicCatalogsPage'
-import { PublicFairsPage } from '../../frontend/src/pages/public/PublicFairsPage'
-import { PublicJournalPage } from '../../frontend/src/pages/public/PublicJournalPage'
-import { PublicCareersPage } from '../../frontend/src/pages/public/PublicCareersPage'
-import { PublicPartnershipPage } from '../../frontend/src/pages/public/PublicPartnershipPage'
 
 function clamp01(n) {
   return Math.min(1, Math.max(0, n))
@@ -74,11 +65,6 @@ const PAGES = {
   'splash-tower': SplashTowerPage,
   services: ServicesPage,
   projects: ProjectsPage,
-  catalogs: PublicCatalogsPage,
-  fairs: PublicFairsPage,
-  journal: PublicJournalPage,
-  careers: PublicCareersPage,
-  partnership: PublicPartnershipPage,
   about: AboutPage,
   contact: ContactPage,
 }
@@ -95,25 +81,9 @@ const PAGE_COLOR_PALETTES = {
 }
 
 export default function App() {
-  const location = useLocation()
-  const isCmsRoute = location.pathname.startsWith('/admin') || location.pathname === '/login'
-  const [cmsQueryClient] = useState(() => new QueryClient())
-  return (
-    <QueryClientProvider client={cmsQueryClient}>
-      {isCmsRoute ? (
-        <AuthProvider>
-          <CmsApp />
-        </AuthProvider>
-      ) : (
-        <PublicSiteShell />
-      )}
-    </QueryClientProvider>
-  )
-}
-
-function PublicSiteShell() {
   const [activePage, setActivePage] = useState('home')
   const [colorPalette, setColorPalette] = useState(PAGE_COLOR_PALETTES.home)
+
 
   const PageComponent = PAGES[activePage] ?? HomePage
   const palette = COLOR_PALETTES[colorPalette] || COLOR_PALETTES[1]
@@ -122,6 +92,7 @@ function PublicSiteShell() {
   const themeVars = {
     '--th-primary': palette.primary,
     '--th-primary-darker': shade(palette.primary, -0.34),
+    
     '--th-bg': palette.light,
   }
 
@@ -129,11 +100,7 @@ function PublicSiteShell() {
     <div className="min-h-screen flex flex-col" data-theme="A" style={themeVars}>
       <Navbar activePage={activePage} setActivePage={setActivePage} colorPalette={colorPalette} />
       <div className="flex-1">
-        <PageComponent
-          setActivePage={setActivePage}
-          colorPalette={colorPalette}
-          setColorPalette={setColorPalette}
-        />
+        <PageComponent setActivePage={setActivePage} colorPalette={colorPalette} setColorPalette={setColorPalette} />
       </div>
       <Footer setActivePage={setActivePage} />
     </div>

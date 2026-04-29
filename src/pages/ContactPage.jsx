@@ -2,6 +2,7 @@
 // CONTACT PAGE — Form + Lokasyon + İletişim Bilgileri
 // ============================================================
 import { useState } from 'react'
+import { apiJson, ApiError } from '../lib/api'
 
 // ── Input Bileşeni ─────────────────────────────────────────
 function Field({ label, type = 'text', placeholder, name, value, onChange, required = false }) {
@@ -87,12 +88,38 @@ export default function ContactPage() {
     interest: 'Su Kaydırakları', message: '',
   })
   const [sent, setSent] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
 
   const handleChange = (e) => setForm((p) => ({ ...p, [e.target.name]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setSent(true)
+    setSubmitError('')
+    setIsSubmitting(true)
+
+    try {
+      await apiJson('/api/partnership/apply', {
+        method: 'POST',
+        body: JSON.stringify({
+          company_name: form.company || 'Bireysel',
+          contact_name: form.name,
+          email: form.email,
+          phone: form.phone,
+          interest_area: form.interest,
+          message: form.message,
+        }),
+      })
+      setSent(true)
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setSubmitError(error.message)
+      } else {
+        setSubmitError('Bir hata olustu. Lutfen tekrar deneyin.')
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -212,11 +239,17 @@ export default function ContactPage() {
                   {/* Submit */}
                   <button
                     type="submit"
+                    disabled={isSubmitting}
                     className="w-full sm:w-auto sm:self-start px-10 py-4 text-white text-sm font-semibold rounded-full transition-all duration-200
-                      bg-[var(--th-polgun-blue)] hover:opacity-90 hover:shadow-xl hover:shadow-[color-mix(in_srgb,var(--th-polgun-blue)_25%,transparent)] hover:-translate-y-0.5"
+                      bg-[var(--th-polgun-blue)] hover:opacity-90 hover:shadow-xl hover:shadow-[color-mix(in_srgb,var(--th-polgun-blue)_25%,transparent)] hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    Talebi Gönder
+                    {isSubmitting ? 'Gonderiliyor...' : 'Talebi Gonder'}
                   </button>
+                  {submitError && (
+                    <p className="text-sm" style={{ color: '#b00020' }}>
+                      {submitError}
+                    </p>
+                  )}
                 </form>
               )}
             </div>
