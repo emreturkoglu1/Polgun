@@ -1,4 +1,6 @@
-const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/+$/, '')
+const API_BASE = (
+  import.meta.env.VITE_API_BASE || 'https://polgunadmin.onrender.com'
+).replace(/\/+$/, '')
 
 export class ApiError extends Error {
   constructor(message, status, payload) {
