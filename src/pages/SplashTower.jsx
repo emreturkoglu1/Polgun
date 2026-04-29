@@ -202,14 +202,9 @@ function SliderModal({ theme, isOpen, onClose }) {
   )
 }
 
-export default function SplashTowerPage({ setActivePage }) {
+export default function SplashTowerPage() {
   const [selectedTheme, setSelectedTheme] = useState(null)
   const [sliderOpen, setSliderOpen] = useState(false)
-
-  const handleThemeClick = (theme) => {
-    setSelectedTheme(theme)
-    setSliderOpen(true)
-  }
 
 
   return (

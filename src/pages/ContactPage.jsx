@@ -81,7 +81,7 @@ function ContactCard({ icon, title, lines }) {
   )
 }
 
-export default function ContactPage({ setActivePage }) {
+export default function ContactPage() {
   const [form, setForm] = useState({
     name: '', email: '', phone: '', company: '',
     interest: 'Su Kaydırakları', message: '',

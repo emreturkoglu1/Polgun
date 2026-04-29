@@ -111,7 +111,7 @@ const NAV_ITEMS = [
   },
 ]
 
-export default function Navbar({ activePage, setActivePage, colorPalette }) {
+export default function Navbar({ activePage, setActivePage }) {
   const [scrolled, setScrolled]       = useState(false)
   const [openMenu, setOpenMenu]       = useState(null)   // mega açık menü id'si
   const [mobileOpen, setMobileOpen]   = useState(false)
