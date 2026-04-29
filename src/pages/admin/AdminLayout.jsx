@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { GhostButton } from '../../components/AdminUı'
+import { GhostButton } from '../../components/AdminUI'
 import { apiJson } from '../../lib/api'
 
 export function AdminLayout() {
